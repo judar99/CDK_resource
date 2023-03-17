@@ -19,4 +19,5 @@ steps:
     regionName: 'us-east-1'
     bucketName: 'cdk-mybucket5af9c99b-ydcipwkqhtuw'
     sourceFolder: 'frontend'
+    targetFolder: 'xml'
     globExpressions: '**'
