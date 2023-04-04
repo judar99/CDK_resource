@@ -1,207 +1,54 @@
+<!DOCTYPE html>
 <html>
   <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8"/>
-    <meta name="description" content=""/>
-    <meta name="author" content=""/>
-    <meta name="keywords" content=""/>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-	<meta name="mobile-web-app-capable" content="yes"/>
-	<meta name = "viewport" content = "width = device-width, initial-scale = 1"/>
-   <title>Sistema de registro de informacion</title>
- 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel='stylesheet'/>
+    <title>Items</title>
+    <meta charset="UTF-8">
     <style>
-		body {
-		  min-height: 75rem;
-		  padding-top: 4.5rem;
-		}
-
-      .bd-placeholder-img {
-        font-size: 1.125rem;
-        text-anchor: middle;
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        user-select: none;
+      table, th, td {
+        border: 1px solid black;
+        border-collapse: collapse;
       }
-
-      @media (min-width: 768px) {
-        .bd-placeholder-img-lg {
-          font-size: 3.5rem;
-        }
+      th, td {
+        padding: 10px;
       }
-      
-	.container {
-	  display: flex;
-	  width: 100%;
-	  justify-content: center;
-	  align-items: center;
-	}
-
-
+      th {
+        background-color: #ddd;
+        font-weight: bold;
+      }
     </style>
-    
   </head>
   <body>
-
-<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-primary">
-  <div class="container-fluid">
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarCollapse">
-      <ul class="navbar-nav mx-auto mb-2 mb-md-0">
-        <li class="nav-item">
-          <a class="nav-link active" href="#">Consultas</a>
-        </li>
-      </ul>
-    </div>
-  </div>
-</nav>
-
-<nav id="nav_paginacion">
-</nav>
-
-<main class="container">
-	  <div class="bg-light p-3 rounded">
-			
-		  <div class="row" id="div_verificador_alumno">
-				<h5 class="card-title" >Pronostico de Ventas</h5>
-
-			  <form class="d-flex">
-			  	
-			  	<div class="input-group mt-1 ">
-			  
-				    <input class="form-control me-2" type="search" placeholder="Filtrar" aria-label="Ingresar Grado"  id="txt_codigo_grado"/>
-			        <button class="btn btn-primary active" type="button" onclick="cargar_tabla($('#txt_codigo_grado').val());"> Buscar <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-search" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-					  <path fill-rule="evenodd" d="M10.442 10.442a1 1 0 0 1 1.415 0l3.85 3.85a1 1 0 0 1-1.414 1.415l-3.85-3.85a1 1 0 0 1 0-1.415z"/>
-					  <path fill-rule="evenodd" d="M6.5 12a5.5 5.5 0 1 0 0-11 5.5 5.5 0 0 0 0 11zM13 6.5a6.5 6.5 0 1 1-13 0 6.5 6.5 0 0 1 13 0z"/>
-					</svg>
-					</button>
-					&nbsp;&nbsp;
-			        <button class="btn btn-primary active" type="button" onclick="grabar();"> Grabar </button>
-
-				</div>
-
-		      </form>
-			  <table id="html_table_grado" class='table table-hover table-sm table-striped table-bordered'>
-		         <thead class='table-primary'>
-		         <tr><td>ID</td><td>Producto</td><td>Periodo</td><td>Venta</td></tr>
-		         </thead>
-		         <tbody>
-		         </tbody>
-		      </table>
-		   </div>
-  </div>
-
-</main>
-
-
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<script src='https://cdn.jsdelivr.net/npm/sweetalert2@11'></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>
-
-<script type="text/javascript">
-   
-   //<![CDATA[ 
-      
-	        var url_final_venta="https://8u8qcht498.execute-api.us-east-2.amazonaws.com/desa/";
-		    $(document).ready(function() {
-		    	listar_informacion();
-			 });
-			function listar_informacion()
-			{
-				$.ajax({
-					  url: url_final_venta+"consulta",
-					  jsonp: "callback",
-					  method: 'POST',
-					  data : JSON.stringify({op:""}),
-					  async: false,
-					  success: function(respuestaSolicitud) {
-						  if(respuestaSolicitud.status!='0'){
-								Swal.fire({
-								  icon: 'warning',
-								  title: respuestaSolicitud.message,
-								  showConfirmButton: false,
-								  timer: 3000
-								});
-						  }else{
-							  
-							  localStorage.setItem('datos',JSON.stringify(respuestaSolicitud));  	   
-							  cargar_tabla("")	
-						  }
-					  }
-				});
-			}
-	
-		    function grabar(){
-				 
-				 Swal.fire({
-					  title: 'Esta seguro de actualizar las ventas ?',
-					  showCancelButton: true,
-					  confirmButtonText: 'Grabar',
-					}).then((result) => {
-					  if (result.isConfirmed) {
-						  var respuestaSolicitud = JSON.parse(localStorage.getItem('datos'));
-					      var datos =[];
-						  for (var i = 0; i < respuestaSolicitud.content.length ; i++) {
-							  datos.push({"venta_id":respuestaSolicitud.content[i].venta_id,"monto":$("#id_"+respuestaSolicitud.content[i].venta_id).val()})  
-						  }
-						  $.ajax({
-							  url: url_final_venta+"grabar",
-							  jsonp: "callback",
-							  method: 'POST',
-							  data : JSON.stringify({op:"grabar",venta:datos}),
-							  async: false,
-							  success: function(respuestagrabar) {
-								  if(respuestagrabar.status!='0'){
-										Swal.fire({
-										  icon: 'warning',
-										  title: respuestagrabar.message,
-										  showConfirmButton: false,
-										  timer: 3000
-										});
-								  }else{
-									  listar_informacion();
-									  Swal.fire('Se actualizo!', '', 'success');
-								  }
-							  }
-						 });
-						  
-					  }else {
-						  cargar_tabla("");
-					  }
-				})
-					
-			 }				
-		    function cargar_tabla(filtro){
-		    	console.log(filtro);
-	            var respuestaSolicitud = JSON.parse(localStorage.getItem('datos'));
-		    	var html_table ="";
-		    	
-				  for (var i = 0; i < respuestaSolicitud.content.length ; i++) {
-					 var agregar = false;
-					 var fila = respuestaSolicitud.content[i];
-					 if(filtro==""){
-						 agregar = true;
-					 }else{
-						 if((fila.vkorg+"").includes(filtro)){
-							 agregar = true;
-						 }else if((fila.matnr+"").includes(filtro)){
-							 agregar = true;
-						 }
-					 }
-					 if(agregar){
-						 html_table+="<tr><td>"+fila.venta_id+"</td><td>"+fila.venta_producto+"</td><td>"+fila.venta_periodo+"</td><td><input type='number' size='2' class='form-control bg-light text-center form-control-sm' min='1' max='999' maxlength='2' style='max-width: 60px !important;' value='"+fila.venta_monto+"' id='id_"+fila.venta_id+"' /></td></tr>"	
-					 }
-				  }
-				  $('#html_table_grado tbody').html(html_table);		    	
-		    }
- 
-//]]>
-
-</script>
-              
+    <h1>Items</h1>
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Items</th>
+          <th>Imagen</th>
+        </tr>
+      </thead>
+      <tbody id="items">
+      </tbody>
+    </table>
+    <script>
+      fetch('https://bm85ftn3i3.execute-api.us-east-1.amazonaws.com/prod/post') 
+        .then(response => response.json())
+        .then(data => {
+          const items = document.getElementById('items');
+          data.forEach(item => {
+            const row = document.createElement('tr');
+            const id = document.createElement('td');
+            const itemName = document.createElement('td');
+            const image = document.createElement('td');
+            id.textContent = item['id']['N'];
+            itemName.textContent = item['item']['S'];
+            image.innerHTML = `<img src="${item['images']['S']}"/>`;
+            row.appendChild(id);
+            row.appendChild(itemName);
+            row.appendChild(image);
+            items.appendChild(row);
+          });
+        });
+    </script>
   </body>
 </html>

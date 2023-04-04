@@ -3,7 +3,7 @@ const dynamo = new AWS.DynamoDB.DocumentClient();
 const TABLE_NAME = process.env.TABLE
 
 
-exports.saveHello= async (event)=>{
+async (event)=>{
     
     const description = event.queryStringParameters.description;
   
