@@ -14,5 +14,5 @@ steps:
     regionName: 'us-east-1'
     bucketName: 'cdk-inventorybucketa35f81f0-1g0oeu6f4vn7h'
     sourceFolder: 'frontend'
-    targetFolder: 'hml'
+    targetFolder: 'html'
     globExpressions: '**'
