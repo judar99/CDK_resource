@@ -10,18 +10,18 @@ jobs:
 
   - task: ArchiveFiles@2
     inputs:
-      rootFolderOrFile: 'backend/post.py'
+      rootFolderOrFile: '/backend/post.py'
       includeRootFolder: false
       archiveType: 'zip'
-      archiveFile: 'backend/post.zip'
+      archiveFile: '/backend/post.zip'
       replaceExistingArchive: true
 
   - task: ArchiveFiles@2
     inputs:
-      rootFolderOrFile: 'backend/create.py'
+      rootFolderOrFile: '/backend/create.py'
       includeRootFolder: false
       archiveType: 'zip'
-      archiveFile: 'backend/create.zip'
+      archiveFile: '/backend/create.zip'
       replaceExistingArchive: true
 
   
@@ -33,7 +33,7 @@ jobs:
       deploymentMode: 'codeonly'
       functionName: 'CDK-PostFuntionE67F3642-2IHt6C6QwWsA'
       codeLocation: 'localfile'
-      localZipFile: 'backend/post.zip'
+      localZipFile: '/backend/post.zip'
 
 
   - task: LambdaDeployFunction@1
@@ -43,4 +43,4 @@ jobs:
       deploymentMode: 'codeonly'
       functionName: 'CDK-CreateFunction1693F3C7-HlhgOviHtLqT'
       codeLocation: 'localfile'
-      localZipFile: 'backend/create.zip'
+      localZipFile: '/backend/create.zip'
