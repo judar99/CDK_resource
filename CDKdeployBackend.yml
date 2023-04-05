@@ -16,6 +16,15 @@ jobs:
       archiveFile: '$(Build.SourcesDirectory)/backend/post.zip'
       replaceExistingArchive: true
 
+  - task: ArchiveFiles@2
+    inputs:
+      rootFolderOrFile: '$(Build.SourcesDirectory)/backend/create.py'
+      includeRootFolder: false
+      archiveType: 'zip'
+      archiveFile: '$(Build.SourcesDirectory)/backend/create.zip'
+      replaceExistingArchive: true
+
+  
     
   - task: LambdaDeployFunction@1
     inputs:
@@ -25,3 +34,13 @@ jobs:
       functionName: 'CDK-PostFuntionE67F3642-2IHt6C6QwWsA'
       codeLocation: 'localfile'
       localZipFile: '$(Build.SourcesDirectory)/backend/post.zip'
+
+
+  - task: LambdaDeployFunction@1
+    inputs:
+      awsCredentials: 'awsConnection'
+      regionName: 'us-east-1'
+      deploymentMode: 'codeonly'
+      functionName: 'CDK-CreateFunction1693F3C7-HlhgOviHtLqT'
+      codeLocation: 'localfile'
+      localZipFile: '$(Build.SourcesDirectory)/backend/create.zip'
