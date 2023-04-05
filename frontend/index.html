@@ -1,54 +1,114 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Items</title>
-    <meta charset="UTF-8">
+    <title>Inventario de productos</title>
     <style>
-      table, th, td {
-        border: 1px solid black;
-        border-collapse: collapse;
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f2f2f2;
+        color: #444444;
       }
-      th, td {
-        padding: 10px;
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #ffffff;
+        border: 1px solid #cccccc;
+        box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.2);
+        border-radius: 10px;
       }
-      th {
-        background-color: #ddd;
-        font-weight: bold;
+      h1 {
+        text-align: center;
+        font-size: 36px;
+        margin-bottom: 20px;
+      }
+      button {
+        background-color: #0066cc;
+        color: #ffffff;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        font-size: 18px;
+        cursor: pointer;
+        margin-bottom: 20px;
+      }
+      button:hover {
+        background-color: #0052a3;
+      }
+      .product-item {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 20px;
+      }
+      .product-item img {
+        height: 100px;
+        margin-right: 20px;
+      }
+      .product-item h3 {
+        font-size: 24px;
+        margin-right: 20px;
+      }
+      .product-item p {
+        font-size: 18px;
+        color: #888888;
+      }
+      .delete-button {
+        background-color: #ff0000;
+        color: #ffffff;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        font-size: 18px;
+        cursor: pointer;
+      }
+      .delete-button:hover {
+        background-color: #cc0000;
       }
     </style>
   </head>
   <body>
-    <h1>Items</h1>
-    <table>
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Items</th>
-          <th>Imagen</th>
-        </tr>
-      </thead>
-      <tbody id="items">
-      </tbody>
-    </table>
+    <div class="container">
+      <h1>Inventario de productos</h1>
+      <button onclick="getData()">Mostrar datos</button>
+      <div id="data"></div>
+    </div>
     <script>
-      fetch('https://bm85ftn3i3.execute-api.us-east-1.amazonaws.com/prod/prueba2') 
+      function getData() {
+        fetch('https://bm85ftn3i3.execute-api.us-east-1.amazonaws.com/prod/post', {
+          method: 'POST',
+        })
         .then(response => response.json())
         .then(data => {
-          const items = document.getElementById('items');
+          let output = '';
           data.forEach(item => {
-            const row = document.createElement('tr');
-            const id = document.createElement('td');
-            const itemName = document.createElement('td');
-            const image = document.createElement('td');
-            id.textContent = item['id']['N'];
-            itemName.textContent = item['item']['S'];
-            image.innerHTML = `<img src="${item['images']['S']}"/>`;
-            row.appendChild(id);
-            row.appendChild(itemName);
-            row.appendChild(image);
-            items.appendChild(row);
+            output += `
+              <div class="product-item">
+                <img src="${item.images.S}" alt="${item.product.S}">
+                <div>
+                  <h3>${item.product.S}</h3>
+                  <p>ID: ${item.id.S}</p>
+                </div>
+                <button class="delete-button" onclick="deleteProduct('${item.id.S}')">Eliminar</button>
+              </div>
+            `;
           });
-        });
-    </script>
+          document.getElementById('data').innerHTML = output;
+        })
+        .catch(error => console.error(error));
+      }
+
+		function deleteProduct(id) {
+		fetch(`https://bm85ftn3i3.execute-api.us-east-1.amazonaws.com/prod/delete/${id}`, {
+		method: 'POST',
+		})
+		.then(response => {
+		console.log(response);
+		getData();
+		})
+		.catch(error => console.error(error));
+	}
+	</script>
   </body>
 </html>
