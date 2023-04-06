@@ -112,7 +112,7 @@
       <button onclick="getData()">Mostrar datos</button>
       <div id="data"></div>
 
-      <div class="form-container">
+      
         <div class="form-input-container">
           <label for="id-input">ID:</label>
           <input type="text" id="id-input">
@@ -126,10 +126,12 @@
           <input type="text" id="image-input">
         </div>
         <button onclick="postData()">Agregar</button>
-      </div>
+      
+      
       
     </div>
     <script>
+
       function getData() {
         fetch('https://bm85ftn3i3.execute-api.us-east-1.amazonaws.com/prod/post', {
             method: 'POST',
@@ -158,22 +160,32 @@
         const id = document.getElementById('id-input').value;
         const product = document.getElementById('product-input').value;
         const images = document.getElementById('image-input').value;
-  
+        
         const data = {
           id: id ,
           product: product,
           images: images
         };
-  
+        
         fetch('https://bm85ftn3i3.execute-api.us-east-1.amazonaws.com/prod/create', {
             method: 'POST',
             body: JSON.stringify(data)
           })
+        
           .then(response => {
             console.log(response.json());
             getData();
+            clearFields();
+            
           })
           .catch(error => console.error(error));
+
+      }
+      
+      function clearFields() {
+        document.getElementById('id-input').value = '';
+        document.getElementById('product-input').value = '';
+        document.getElementById('image-input').value = '';
       }
   
       function deleteProduct(id) {
