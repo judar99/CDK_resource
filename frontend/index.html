@@ -66,6 +66,44 @@
       .delete-button:hover {
         background-color: #cc0000;
       }
+      form {
+        display: flex;
+        flex-direction: row;
+        align-items: flex-start;
+        margin-bottom: 20px;
+      }
+      label {
+        font-size: 18px;
+        margin-bottom: 10px;
+      }
+      input[type="text"] {
+        padding: 10px;
+        margin-bottom: 20px;
+        border-radius: 5px;
+        border: none;
+        font-size: 18px;
+        width: 100%;
+        box-sizing: border-box;
+        background-color: #b2b2b246;
+      }
+      .form-container input {
+        font-size: 18px;
+        padding: 5px;
+        margin-bottom: 10px;
+        width: 100%;
+        border-radius: 5px;
+        border: none;
+        margin-right: 20px;
+      }
+
+      .form-container .form-input-container {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        margin-bottom: 10px;
+      }
+
+          
     </style>
   </head>
   <body>
@@ -73,42 +111,81 @@
       <h1>Inventario De Productos</h1>
       <button onclick="getData()">Mostrar datos</button>
       <div id="data"></div>
+
+      <div class="form-container">
+        <div class="form-input-container">
+          <label for="id-input">ID:</label>
+          <input type="text" id="id-input">
+        </div>
+        <div class="form-input-container">
+          <label for="product-input">Product:</label>
+          <input type="text" id="product-input">
+        </div>
+        <div class="form-input-container">
+          <label for="image-input">Image URL:</label>
+          <input type="text" id="image-input">
+        </div>
+        <button onclick="postData()">Agregar</button>
+      </div>
+      
     </div>
     <script>
       function getData() {
         fetch('https://bm85ftn3i3.execute-api.us-east-1.amazonaws.com/prod/post', {
-          method: 'POST',
-        })
-        .then(response => response.json())
-        .then(data => {
-          let output = '';
-          data.forEach(item => {
-            output += `
-              <div class="product-item">
-                <img src="${item.images.S}" alt="${item.product.S}">
-                <div>
-                  <h3>${item.product.S}</h3>
-                  <p>ID: ${item.id.S}</p>
+            method: 'POST',
+          })
+          .then(response => response.json())
+          .then(data => {
+            let output = '';
+            data.forEach(item => {
+              output += `
+                <div class="product-item">
+                  <img src="${item.images.S}" alt="${item.product.S}">
+                  <div>
+                    <h3>${item.product.S}</h3>
+                    <p>ID: ${item.id.S}</p>
+                  </div>
+                  <button class="delete-button" onclick="deleteProduct('${item.id.S}')">Eliminar</button>
                 </div>
-                <button class="delete-button" onclick="deleteProduct('${item.id.S}')">Eliminar</button>
-              </div>
-            `;
-          });
-          document.getElementById('data').innerHTML = output;
-        })
-        .catch(error => console.error(error));
+              `;
+            });
+            document.getElementById('data').innerHTML = output;
+          })
+          .catch(error => console.error(error));
       }
-
-		function deleteProduct(id) {
-		fetch(`https://bm85ftn3i3.execute-api.us-east-1.amazonaws.com/prod/delete/${id}`, {
-		method: 'POST',
-		})
-		.then(response => {
-		console.log(response);
-		getData();
-		})
-		.catch(error => console.error(error));
-	}
-	</script>
+  
+      function postData() {
+        const id = document.getElementById('id').value;
+        const product = document.getElementById('product').value;
+        const images = document.getElementById('images').value;
+  
+        const data = {
+          id: { S: id },
+          product: { S: product },
+          images: { S: images }
+        };
+  
+        fetch('https://bm85ftn3i3.execute-api.us-east-1.amazonaws.com/prod/update', {
+            method: 'POST',
+            body: JSON.stringify(data)
+          })
+          .then(response => {
+            console.log(response);
+            getData();
+          })
+          .catch(error => console.error(error));
+      }
+  
+      function deleteProduct(id) {
+        fetch(`https://bm85ftn3i3.execute-api.us-east-1.amazonaws.com/prod/delete/${id}`, {
+            method: 'POST',
+          })
+          .then(response => {
+            console.log(response);
+            getData();
+          })
+          .catch(error => console.error(error));
+      }
+    </script>
   </body>
 </html>
