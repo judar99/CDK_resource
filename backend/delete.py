@@ -1,6 +1,6 @@
 import json
 import boto3
-dynamodb = boto3.client('dynamodb')
+dynamodb = boto3.resource('dynamodb')
 
 def delete_item(tablename, id_product):
     table = dynamodb.Table(tablename)

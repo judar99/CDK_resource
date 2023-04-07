@@ -126,9 +126,6 @@
           <input type="text" id="image-input">
         </div>
         <button onclick="postData()">Agregar</button>
-      
-      
-      
     </div>
     <script>
 
@@ -181,7 +178,7 @@
           .catch(error => console.error(error));
 
       }
-      
+
       function clearFields() {
         document.getElementById('id-input').value = '';
         document.getElementById('product-input').value = '';
@@ -189,8 +186,14 @@
       }
   
       function deleteProduct(id) {
-        fetch(`https://bm85ftn3i3.execute-api.us-east-1.amazonaws.com/prod/delete/${id}`, {
+        fetch(`https://bm85ftn3i3.execute-api.us-east-1.amazonaws.com/prod/delete`, {
             method: 'DELETE',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              id: id
+            })
           })
           .then(response => {
             console.log(response);
