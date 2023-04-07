@@ -1,59 +1,42 @@
 import json
 import boto3
-
 dynamodb = boto3.client('dynamodb')
 
+def delete_item(tablename, id_product):
+    table = dynamodb.Table(tablename)
+    response = table.delete_item(
+        Key={
+            'id': id_product
+        }
+    )
+    return response
+
 def lambdaFuncion(event, context):
-    
-    table_name = 'CDK-InventoryTableFD135387-1PJCZGC6IAOMO'
-    product_name = event['pathParameters']['product']
-    
     try:
-        response = dynamodb.scan(
-            TableName=table_name,
-            FilterExpression='product_name = :product_name',
-            ExpressionAttributeValues={
-                ':product_name': {'S': product_name}
-            }
-        )
-        
-        if response['Count'] == 0:
-            return {
-                'statusCode': 404,
-                'headers': {
-                    'Access-Control-Allow-Origin': '*',
-                    'Access-Control-Allow-Headers': 'Content-Type',
-                    'Access-Control-Allow-Methods': 'POST'
-                },
-                'body': json.dumps({'message': f'Product with name {product_name} not found'})
-            }
-        
-        item = response['Items'][0]
-        product_id = item['id']['S']
-        
-        dynamodb.delete_item(
-            TableName=table_name,
-            Key={
-                'id': {'S': product_id}
-            }
-        )
-        
+        body = json.loads(event['body'])
+        product_id = body['id']
+        table_name = 'CDK-InventoryTableFD135387-1PJCZGC6IAOMO'
+        delete_item(table_name, product_id)
         return {
             'statusCode': 200,
             'headers': {
                 'Access-Control-Allow-Origin': '*',
-                'Access-Control-Allow-Headers': 'Content-Type',
-                'Access-Control-Allow-Methods': 'POST'
+                'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE ,OPTIONS',
+                'Access-Control-Allow-Headers': 'Content-Type,X-Amz-Date,X-Api-Key,X-Amz-Security-Token'
             },
-            'body': json.dumps({'message': f'Product with name {product_name} and id {product_id} deleted successfully'})
+            'body': json.dumps({
+                "messege":"Item deleted successfully"
+            })
         }
-    except:
+    except Exception as e:
         return {
-            'statusCode': 500,
+            'statusCode': 400,
             'headers': {
                 'Access-Control-Allow-Origin': '*',
-                'Access-Control-Allow-Headers': 'Content-Type',
-                'Access-Control-Allow-Methods': 'POST'
+                'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE ,OPTIONS',
+                'Access-Control-Allow-Headers': 'Content-Type,X-Amz-Date,X-Api-Key,X-Amz-Security-Token'
             },
-            'body': json.dumps({'message': f'Error deleting product with name {product_name}'})
+            'body': json.dumps({
+                "messege":str(e)
+            })
         }
