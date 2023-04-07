@@ -114,15 +114,15 @@
 
       
         <div class="form-input-container">
-          <label for="id-input">ID:</label>
-          <input type="text" id="id-input">
+          <label for="amount-input">Cantidad:</label>
+          <input type="text" id="amount-input">
         </div>
         <div class="form-input-container">
-          <label for="product-input">Product:</label>
+          <label for="product-input">Producto:</label>
           <input type="text" id="product-input">
         </div>
         <div class="form-input-container">
-          <label for="image-input">Image URL:</label>
+          <label for="image-input">Image:</label>
           <input type="text" id="image-input">
         </div>
         <button onclick="postData()">Agregar</button>
@@ -142,7 +142,7 @@
                   <img src="${item.images.S}" alt="${item.product.S}">
                   <div>
                     <h3>${item.product.S}</h3>
-                    <p>ID: ${item.id.S}</p>
+                    <p>Cantidad: ${item.amount.S}</p>
                   </div>
                   <button class="delete-button" onclick="deleteProduct('${item.id.S}')">Eliminar</button>
                 </div>
@@ -154,12 +154,12 @@
       }
   
       function postData() {
-        const id = document.getElementById('id-input').value;
+        const amount = document.getElementById('amount-input').value;
         const product = document.getElementById('product-input').value;
         const images = document.getElementById('image-input').value;
         
         const data = {
-          id: id ,
+          amount: amount ,
           product: product,
           images: images
         };
@@ -180,7 +180,7 @@
       }
 
       function clearFields() {
-        document.getElementById('id-input').value = '';
+        document.getElementById('amount-input').value = '';
         document.getElementById('product-input').value = '';
         document.getElementById('image-input').value = '';
       }

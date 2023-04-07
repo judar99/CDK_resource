@@ -2,16 +2,18 @@ import json
 import boto3
 import json
 from pprint import pprint
+import uuid
 
 dynamodb = boto3.client('dynamodb')
 
 
-def create_item(tablename, id_product, product, images):
+def create_item(tablename, id_product, product, images,amount):
     response = dynamodb.put_item(
         TableName=tablename,
         Item={
             'id': {'S': id_product},
             'product': {'S': product},
+            'amount' : {'S': amount},
             'images': {'S': images}
         }
     )
@@ -22,12 +24,13 @@ def lambdaFuncion(event, context):
     try:
     
         body = json.loads(event['body'])
-        product_id = body['id']
+        product_id = str(uuid.uuid4())
         product = body['product']
         images = body['images']
+        amount = body['amount']
     
         table_name = 'CDK-InventoryTableFD135387-1PJCZGC6IAOMO'
-        create_item(table_name, product_id, product, images)
+        create_item(table_name, product_id, product, images,amount)
     
         return {
             'statusCode': 200,
