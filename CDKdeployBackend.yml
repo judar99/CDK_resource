@@ -24,7 +24,17 @@ jobs:
       archiveFile: 'backend/create.zip'
       replaceExistingArchive: true
 
+
+  - task: ArchiveFiles@2
+    inputs:
+      rootFolderOrFile: 'backend/delete.py'
+      includeRootFolder: false
+      archiveType: 'zip'
+      archiveFile: 'backend/delete.zip'
+      replaceExistingArchive: true
+
   
+
     
   - task: LambdaDeployFunction@1
     inputs:
@@ -44,3 +54,13 @@ jobs:
       functionName: 'CDK-CreateFunction1693F3C7-HlhgOviHtLqT'
       codeLocation: 'localfile'
       localZipFile: 'backend/create.zip'
+
+
+  - task: LambdaDeployFunction@1
+    inputs:
+      awsCredentials: 'awsConnection'
+      regionName: 'us-east-1'
+      deploymentMode: 'codeonly'
+      functionName: 'CDK-DeleteFunction9052F8B5-KBdOxTsZup0t'
+      codeLocation: 'localfile'
+      localZipFile: 'backend/delete.zip'
