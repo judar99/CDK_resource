@@ -131,7 +131,7 @@
           })
           .catch(error => console.error(error));
       }
-  
+      
       function postData() {
         const amount = document.getElementById('amount-input').value;
         const product = document.getElementById('product-input').value;
@@ -154,21 +154,19 @@
             })
           })
           .then(response => {
-            console.log(response.json());
+            console.log(response.json()); 
             getData();
-            clearFields();
+            imageInput.value = '';
+            document.getElementById('amount-input').value = '';
+            document.getElementById('product-input').value = '';
           })
           .catch(error => console.error(error));
         };
 
         reader.readAsArrayBuffer(imageFile);
+        imageInput.value = '';
       }
 
-      function clearFields() {
-        document.getElementById('amount-input').value = '';
-        document.getElementById('product-input').value = '';
-        
-      }
   
       function deleteProduct(id) {
         fetch(`https://bm85ftn3i3.execute-api.us-east-1.amazonaws.com/prod/delete`, {
