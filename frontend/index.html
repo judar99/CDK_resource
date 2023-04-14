@@ -82,6 +82,24 @@
         margin-top: 20px;
         text-align: center;
       }
+
+      .add-button {
+        background-color: #4CAF50;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+
+    .logout-button {
+      background-color: #f44336;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
      
     </style>
   </head>
@@ -90,22 +108,25 @@
       <h1>INVENTARIO DE PRODUCTOS</h1>
       <button onclick="getData()">Mostrar datos</button>
       <div id="data"></div>
-
-      
-        <div class="form-input-container">
-          <label for="amount-input">Cantidad:</label>
-          <input type="text" id="amount-input">
-        </div>
-        <div class="form-input-container">
-          <label for="product-input">Producto:</label>
-          <input type="text" id="product-input">
-        </div>
-        <div class="form-input-container">
-          <label for="image-input">Image:</label>
-          <input type="file" id="image-input">
-        </div>
+    
+      <div class="form-input-container">
+        <label for="amount-input">Cantidad:</label>
+        <input type="text" id="amount-input">
+      </div>
+      <div class="form-input-container">
+        <label for="product-input">Producto:</label>
+        <input type="text" id="product-input">
+      </div>
+      <div class="form-input-container">
+        <label for="image-input">Image:</label>
+        <input type="file" id="image-input">
+      </div>
+      <div class="button-container">
         <button class="add-button" onclick="postData()">Agregar</button>
+        <button class="logout-button" onclick="cerrarSesion()">Cerrar sesión</button>
+      </div>
     </div>
+    
     <script>
 
       function getData() {
@@ -184,6 +205,11 @@
           })
           .catch(error => console.error(error));
       }
+      function cerrarSesion() {
+			sessionStorage.clear();
+			alert("Sesión cerrada correctamente.");
+			window.location.href = "https://my-app-auth.auth.us-east-1.amazoncognito.com/login?client_id=17jps7vvanjafgrslspbkvsahj&response_type=code&scope=aws.cognito.signin.user.admin+email+openid+phone+profile&redirect_uri=https%3A%2F%2Fd3rqmggq1mn5yi.cloudfront.net";
+		}
     </script>
   </body>
 </html>
